@@ -258,7 +258,10 @@ const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme 
               </div>
               <div className="leading-none">
                 {isBuddy ? (
-                  <span className="text-[17px] font-bold text-white tracking-tight font-primary block whitespace-nowrap">
+                  <span
+                    className="text-[17px] font-bold tracking-tight font-primary block whitespace-nowrap"
+                    style={{ color: brandColor }}
+                  >
                     {stat.value}
                   </span>
                 ) : (
