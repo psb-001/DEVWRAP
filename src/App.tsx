@@ -108,7 +108,7 @@ function App() {
       const cardHeight = cardElement.offsetHeight || 800;
 
       const canvas = await html2canvas(cardElement, {
-        scale: 2, // 2 is significantly more stable for complex sub-pixel alignment
+        scale: 3, // 3x for ultra-sharp high-density results
         useCORS: true,
         backgroundColor: null,
         width: 450,
@@ -118,7 +118,24 @@ function App() {
         scrollY: 0,
         windowWidth: 450,
         windowHeight: cardHeight,
+        imageTimeout: 0,
         onclone: (clonedDoc) => {
+          // Force certain styles to be captured more effectively
+          const el = clonedDoc.querySelector('.card-to-capture') as HTMLElement;
+          if (el) {
+            el.style.transform = 'none';
+            // Slight contrast/saturation boost to make the capture feel more vibrant like the live preview
+            el.style.filter = 'saturate(1.1) contrast(1.05)';
+          }
+
+          // html2canvas doesn't support mix-blend-mode well
+          // We'll adjust the noise texture to be slightly more visible without blending
+          const noise = clonedDoc.querySelector('.noise-overlay') as HTMLElement;
+          if (noise) {
+            noise.style.mixBlendMode = 'normal';
+            noise.style.opacity = '0.02';
+          }
+
           const images = clonedDoc.getElementsByTagName('img');
           return Promise.all(Array.from(images).map(img => {
             if (img.complete) return Promise.resolve();
