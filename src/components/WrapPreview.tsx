@@ -87,7 +87,8 @@ const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme 
   const getThemeStyles = () => {
     const base = {
       width: '450px',
-      height: '800px',
+      minHeight: '800px',
+      height: 'auto',
       backgroundColor: '#000000',
       border: '1px solid transparent'
     };
@@ -256,7 +257,7 @@ const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme 
       <div className="flex-grow" />
 
       {/* 📸 Section 3: Details (Polaroid + Tech) */}
-      <div className="relative z-20 pt-8 border-t border-white/[0.08] flex gap-8 items-end mb-10">
+      <div className="relative z-20 pt-8 mt-8 border-t border-white/[0.08] flex gap-8 items-end mb-6">
         {/* Polaroid Left */}
         <div className="relative shrink-0">
           <div className="bg-white p-3 w-[145px] h-[165px] shadow-2xl rounded-[1px] rotate-[-2deg]">
