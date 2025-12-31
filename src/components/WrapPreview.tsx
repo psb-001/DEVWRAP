@@ -140,7 +140,7 @@ const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme 
   return (
     <div
       ref={ref}
-      className="relative flex flex-col overflow-hidden shadow-2xl rounded-[3rem] select-none text-white font-primary"
+      className="relative flex flex-col overflow-hidden shadow-2xl rounded-none select-none text-white font-primary"
       style={{
         ...getThemeStyles(),
         padding: '50px 33px'
