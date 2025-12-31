@@ -61,6 +61,15 @@ The app will be available at `http://localhost:5173`.
 
 ---
 
+## 🗺️ Roadmap & Future Improvements
+
+- [ ] **🔧 Fix Card Scaling Bugs**: Resolve edge cases where the card layout might shift during PNG generation on specific resolutions.
+- [ ] **📱 Enhanced Mobile Editor**: Improve the data entry experience on smaller screens.
+- [ ] **🎨 More Themes**: Add dark/light mode toggles and community-designed themes.
+- [ ] **🔄 Social API Integration**: Directly share to Twitter/LinkedIn with one click.
+
+---
+
 ## 🤝 Contributing
 
 Contributions are welcome! If you'd like to improve the UI, add new themes, or fix bugs:
