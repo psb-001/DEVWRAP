@@ -35,36 +35,50 @@ interface WrapPreviewProps {
 }
 
 const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme }, ref) => {
-  const renderIcon = (iconKey: string, size = "w-6 h-6") => {
+  const renderIcon = (iconKey: string) => {
     const key = iconKey.toLowerCase();
-    const style = { color: '#C1C5D0' };
+    // Use extremely stable styles for html2canvas
+    const iconStyle: React.CSSProperties = {
+      color: '#C1C5D0',
+      width: '24px',
+      height: '24px',
+      display: 'block',
+      margin: 'auto'
+    };
 
+    let icon = null;
     if (CUSTOM_SVG_ICONS.includes(key)) {
-      const iconProps = { className: size, style };
+      const iconProps = { style: iconStyle };
       switch (key) {
-        case 'vscode': return <VSCodeIcon {...iconProps} />;
+        case 'vscode': icon = <VSCodeIcon {...iconProps} />; break;
         case 'ts':
-        case 'typescript': return <TypeScriptIcon {...iconProps} />;
-        case 'cpp': return <CPlusPlusIcon {...iconProps} />;
-        case 'c#': return <CSharpIcon {...iconProps} />;
-        case 'c': return <CIcon {...iconProps} />;
-        case 'rust': return <RustIcon {...iconProps} />;
-        case 'cursor': return <CursorIcon {...iconProps} />;
-        case 'go': return <GoIcon {...iconProps} />;
-        case 'swift': return <SwiftIcon {...iconProps} />;
-        case 'kotlin': return <KotlinIcon {...iconProps} />;
-        case 'ruby': return <RubyIcon {...iconProps} />;
-        case 'notion': return <NotionIcon {...iconProps} />;
-        case 'chatgpt': return <ChatGPTIcon {...iconProps} />;
-        case 'gemini': return <GeminiIcon {...iconProps} />;
-        case 'claude': return <ClaudeIcon {...iconProps} />;
-        case 'sql': return <SQLIcon {...iconProps} />;
+        case 'typescript': icon = <TypeScriptIcon {...iconProps} />; break;
+        case 'cpp': icon = <CPlusPlusIcon {...iconProps} />; break;
+        case 'c#': icon = <CSharpIcon {...iconProps} />; break;
+        case 'c': icon = <CIcon {...iconProps} />; break;
+        case 'rust': icon = <RustIcon {...iconProps} />; break;
+        case 'cursor': icon = <CursorIcon {...iconProps} />; break;
+        case 'go': icon = <GoIcon {...iconProps} />; break;
+        case 'swift': icon = <SwiftIcon {...iconProps} />; break;
+        case 'kotlin': icon = <KotlinIcon {...iconProps} />; break;
+        case 'ruby': icon = <RubyIcon {...iconProps} />; break;
+        case 'notion': icon = <NotionIcon {...iconProps} />; break;
+        case 'chatgpt': icon = <ChatGPTIcon {...iconProps} />; break;
+        case 'gemini': icon = <GeminiIcon {...iconProps} />; break;
+        case 'claude': icon = <ClaudeIcon {...iconProps} />; break;
+        case 'sql': icon = <SQLIcon {...iconProps} />; break;
         default: break;
       }
+    } else {
+      const iconClass = ICON_MAP[key] || 'fa-solid fa-code';
+      icon = <i className={iconClass} style={{ ...iconStyle, fontSize: '24px', lineHeight: '24px', textAlign: 'center' }} />;
     }
 
-    const iconClass = ICON_MAP[key] || 'fa-solid fa-code';
-    return <i className={`${iconClass} block`} style={{ ...style, fontSize: '1.25rem' }} />;
+    return (
+      <div style={{ width: '24px', height: '24px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        {icon}
+      </div>
+    );
   };
 
   const statIcons = [
@@ -140,7 +154,7 @@ const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme 
   return (
     <div
       ref={ref}
-      className="relative flex flex-col overflow-hidden shadow-2xl rounded-none select-none text-white font-primary"
+      className="relative flex flex-col shadow-2xl rounded-none select-none text-white font-primary"
       style={{
         ...getThemeStyles(),
         padding: '50px 33px'
@@ -216,7 +230,7 @@ const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme 
       </div>
 
       {/* 📊 Section 2: Metrics Grid */}
-      <div className="relative z-20 grid grid-cols-2 gap-x-10 gap-y-10">
+      <div className="relative z-20 grid grid-cols-2 gap-x-6 gap-y-10">
         {displayStats.map((stat, idx) => {
           const isBuddy = stat.label.toLowerCase().includes('buddy');
           const cleanValue = stat.value === 'Infinity' ? '∞' : stat.value.replace(/ Apps/g, '');
@@ -225,10 +239,18 @@ const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme 
             <div key={idx} className="flex flex-col gap-2.5">
               <div className="flex flex-col gap-1.5">
                 <div
-                  className="w-6 h-6 flex items-center justify-start"
-                  style={{ color: brandColor !== '#FFFFFF' ? brandColor : '#C1C5D0' }}
+                  className="w-6 h-6"
+                  style={{
+                    color: brandColor !== '#FFFFFF' ? brandColor : '#C1C5D0',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
                 >
-                  {statIcons[idx]({ className: "w-full h-full" })}
+                  {statIcons[idx]({
+                    className: "w-6 h-6",
+                    style: { width: '24px', height: '24px', display: 'block' }
+                  })}
                 </div>
                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-[#C1C5D0]">
                   {stat.label}
@@ -236,7 +258,7 @@ const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme 
               </div>
               <div className="leading-none">
                 {isBuddy ? (
-                  <span className="text-[17px] font-bold text-white tracking-tight font-primary truncate block max-w-full">
+                  <span className="text-[17px] font-bold text-white tracking-tight font-primary block whitespace-nowrap">
                     {stat.value}
                   </span>
                 ) : (
@@ -289,17 +311,21 @@ const WrapPreview = forwardRef<HTMLDivElement, WrapPreviewProps>(({ data, theme 
         <div className="flex flex-col flex-1 gap-6 pb-2">
           <div className="flex flex-col gap-3">
             <span className="text-[9px] font-black tracking-[0.4em] uppercase text-[#9AA0B2]">Toolkit</span>
-            <div className="flex flex-wrap gap-4">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
               {data.tools.filter(t => t).slice(0, 5).map((t, i) => (
-                <div key={i} className="opacity-100 transition-transform hover:scale-110">{renderIcon(t, "w-6 h-6")}</div>
+                <div key={i} style={{ width: '24px', height: '24px', display: 'block', flexShrink: 0 }}>
+                  {renderIcon(t)}
+                </div>
               ))}
             </div>
           </div>
           <div className="flex flex-col gap-3">
             <span className="text-[9px] font-black tracking-[0.4em] uppercase text-[#9AA0B2]">Languages</span>
-            <div className="flex flex-wrap gap-4">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', alignItems: 'center' }}>
               {data.languages.filter(l => l).slice(0, 5).map((l, i) => (
-                <div key={i} className="opacity-100 transition-transform hover:scale-110">{renderIcon(l, "w-6 h-6")}</div>
+                <div key={i} style={{ width: '24px', height: '24px', display: 'block', flexShrink: 0 }}>
+                  {renderIcon(l)}
+                </div>
               ))}
             </div>
           </div>

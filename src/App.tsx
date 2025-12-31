@@ -50,21 +50,30 @@ function App() {
     const observer = new ResizeObserver(() => {
       if (previewRef.current) {
         const card = previewRef.current;
-        const availableWidth = wrapper.clientWidth - 32;
-        const availableHeight = wrapper.clientHeight - 32;
+        const isMobile = window.innerWidth < 768;
 
-        const cardWidth = 450;
-        const cardHeight = card.offsetHeight || 800;
+        if (isMobile) {
+          // On mobile, don't scale - let it be scrollable
+          card.style.transform = 'none';
+          card.style.transformOrigin = 'top center';
+        } else {
+          // On desktop, scale to fit
+          const availableWidth = wrapper.clientWidth - 32;
+          const availableHeight = wrapper.clientHeight - 32;
 
-        const scaleX = availableWidth / cardWidth;
-        const scaleY = availableHeight / cardHeight;
+          const cardWidth = 450;
+          const cardHeight = card.offsetHeight || 800;
 
-        let scale = Math.min(scaleX, scaleY);
-        if (scale > 1) scale = 1;
-        if (scale < 0.1) scale = 0.1;
+          const scaleX = availableWidth / cardWidth;
+          const scaleY = availableHeight / cardHeight;
 
-        card.style.transform = `scale(${scale})`;
-        card.style.transformOrigin = 'center center';
+          let scale = Math.min(scaleX, scaleY);
+          if (scale > 1) scale = 1;
+          if (scale < 0.1) scale = 0.1;
+
+          card.style.transform = `scale(${scale})`;
+          card.style.transformOrigin = 'center center';
+        }
       }
     });
 
@@ -237,7 +246,7 @@ function App() {
 
         <div
           ref={scaleWrapperRef}
-          className={`flex-1 bg-black relative flex items-center justify-center p-4 md:p-12 overflow-hidden ${activeTab === 'edit' ? 'hidden md:flex' : 'flex'
+          className={`flex-1 bg-black relative flex items-start md:items-center justify-center p-4 md:p-12 overflow-auto md:overflow-hidden ${activeTab === 'edit' ? 'hidden md:flex' : 'flex'
             }`}
         >
           <WrapPreview
